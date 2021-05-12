@@ -1,2 +1,2 @@
 # GlobalNOC Worldview Panel
-Made with React + TypeScript
+Made with React + TypeScript - for Grafana
