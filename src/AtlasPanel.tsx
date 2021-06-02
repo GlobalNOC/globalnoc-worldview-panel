@@ -74,6 +74,11 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
   }
 
   componentDidUpdate() {
+    // Refresh Leaflet Container whenever component is rerendered
+    // Rerender will happen whenever the hieght/width of container is resized
+    if (this.state.atlas) {
+      this.state.atlas.map.invalidateSize();
+    }
     this.configureAtlasEditorDisplay();
     if (editFromPanel) {
       editFromPanel = false;
@@ -157,9 +162,11 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     let setData = this.setTopologyData.bind(this);
     atlas.editor.disableAllModes();
 
+    let editorButton = document.querySelector('.atlas-toggle-editor') as HTMLAnchorElement;
+    editorButton.style.display = 'none';
     if (atlas.editor.sidebar.sbContainer) {
       atlas.editor.hideToolbar();
-      atlas.editor.hideSidebar();
+      atlas.editor.hideSidebar(); 
     }
 
     atlas.removeAllTopologies();
@@ -216,6 +223,8 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
       console.error('Unable to parse JSON data from Panel Options Editor');
     }
 
+    let editorButton = document.querySelector('.atlas-toggle-editor') as HTMLAnchorElement;
+    editorButton.style.display = '';
     if (topology) {
       // Disable Atlas Editor
       atlas.editor.disableAllModes();
