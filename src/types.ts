@@ -1,5 +1,4 @@
 type mapTypes = 'custom' | 'url';
-type mapTile = 'map' | 'satellite' | 'dark';
 export type CircuitDataType = number | null;
 
 export interface MapUrl {
@@ -22,12 +21,26 @@ export interface SimpleOptions {
   mapType: mapTypes;
   customMapJSON: TextOptions;
   mapURLs: MapUrl;
-  mapTile: mapTile;
+  mapTile: boolean;
+  mapTileURL: string;
   weatherTile: boolean;
   mapView: MapViewInterface;
   legend: LegendOptions;
   topology: TopologyOptions;
   mapSelector: boolean;
+  dataAggregateGroups: DataAggregateGroup[];
+  dataMappings: DataMappingOptions;
+}
+
+export interface DataMappingOptions {
+  dataTarget: string;
+  dataAggregate: 'first' | 'sum';
+  colorCriteria: 'now' | 'min' | 'max' | 'avg';
+}
+
+export interface DataAggregateGroup {
+  aggregate_group: string;
+  pattern: string;
 }
 
 export type TextMode = 'json' | 'html' | 'markdown';

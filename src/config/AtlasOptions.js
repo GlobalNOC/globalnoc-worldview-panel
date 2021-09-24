@@ -1,5 +1,5 @@
-var lineHtml = `<div class=\"atlas4-tt-container\" style=\"width: 250px;background: #ffffffd4;box-shadow: 0 3px 14px rgba(0,0,0,0.4);border-radius: 5px;\/* box-sizing: border-box; *\/padding: 10px 0;\">\r\n    <h4 class=\"atlas4-tt-topology\" style=\"\r\n        font-size: 18px;\r\n        font-weight: 500;\r\n        color: #4f505f;\r\n        text-align: center;\r\n        text-transform: uppercase;\r\n    \">$topology<\/h4>\r\n    <h6 class=\"atlas4-tt-label\" style=\"\r\n        font-size: 12px;\r\n        color: #4f505f;\r\n        font-weight: 500;\r\n        text-align: center;\r\n    \">$label<\/h6>\r\n    <img class=\"atlas4-tt-image\" img_src=\"$image\" alt=\"$topology\" style=\"\r\n        display: block;\r\n        margin: 10px auto;\r\n        max-height: 50px; max-width: 225px;    \"\/>\r\n    <div class=\"atlas4-tt-column atlas4-tt-column-line\" style=\"padding: 0px 20px;font-size: 0;\">\r\n        <p style=\"\r\n            margin: 0;\r\n            font-size: 12px;\r\n            display: inline-block;\r\n            width: 20%;\r\n        \">Input<\/p>\r\n                <p style=\"\r\n            margin: 0;\r\n            font-size: 12px;\r\n            display: inline-block;\r\n            width: 80%;\r\n            text-align: end;\r\n        \">$input.now<\/p>\r\n    <\/div>\r\n    <div class=\"atlas4-tt-column atlas4-tt-column-line\" style=\"padding: 0px 20px;font-size: 0;\">\r\n        <p style=\"\r\n            margin: 0;\r\n            font-size: 12px;\r\n            display: inline-block;\r\n            width: 20%;\r\n        \">Output<\/p>\r\n                <p style=\"\r\n            margin: 0;\r\n            font-size: 12px;\r\n            display: inline-block;\r\n            width: 80%;\r\n            text-align: end;\r\n        \">$output.now<\/p>\r\n    <\/div>\r\n<\/div>`
-var pointHtml = `<div class=\"atlas4-tt-container\" style=\"\r\n    width: 100px;\r\n    background: #ffffffd4;\r\n    box-shadow: 0 0px 8px rgba(0,0,0,0.4);\r\n    border-radius: 5px;\r\n    padding: 10px 10px;\r\n    \">\r\n    <div>\r\n        <h4 class=\"atlas4-tt-topology\" style=\"\r\n            font-size: 16px;\r\n            text-align: center;\r\n            text-transform: uppercase;\r\n        \">$topology<\/h4>\r\n        <img class=\"atlas4-tt-image\" img_src=\"$image\" style=\"\r\n     margin: 6px 0px; max-width: 50px; max-height: 50px; position: relative; left: 50%; transform: translate(-50%, 0);\">\r\n    <\/div>\r\n    <h6 class=\"atlas4-tt-label\" style=\"\r\n          text-align: center;\r\n          font-size: 14px;\r\n          font-weight: 500;\r\n      \">$label<\/h6>\r\n<\/div>`
+import pointHtml from './pointHtml.js';
+import lineHtml from './lineHtml.js';
 
 const mapOptions = {
   debug: true,
@@ -58,23 +58,21 @@ const tileOptions = [
     id: 'mapbox.streets',
     default: true,
     name: 'map'
-  },
-  {
-    url: 'https://api.mapbox.com/styles/v1/grnoc/ckm2bqp58b1fr17o0xc82mn52/tiles/{z}/{x}/{y}',
-    token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
-    maxZoom: 20,
-    attribution: 'Nope',
-    id: 'mapbox.satellite',
-    name: 'satellite'
-  },
-  {
-    url: 'https://api.mapbox.com/styles/v1/grnoc/cknkjwibv0ksy17o6ohjkk3t2/tiles/{z}/{x}/{y}',
-    token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
-    maxZoom: 20,
-    attribution: 'Nope',
-    id: 'mapbox.monochrome',
-    name: 'dark'
   }
+  // {
+  //   url: 'https://api.mapbox.com/styles/v1/grnoc/ckm2bqp58b1fr17o0xc82mn52/tiles/{z}/{x}/{y}',
+  //   token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
+  //   maxZoom: 20,
+  //   attribution: 'Nope',
+  //   id: 'mapbox.satellite',
+  //   name: 'satellite'
+  // },
+  // {
+  //   url: 'https://api.mapbox.com/styles/v1/grnoc/cknkjwibv0ksy17o6ohjkk3t2/tiles/{z}/{x}/{y}',
+  //   token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
+  //   maxZoom: 20,
+  //   name: 'dark'
+  // }
 ]
 
 const overlayTileOptions = [
@@ -105,7 +103,9 @@ const pointOptions = {
 }
 
 const lineOptions = {
-  dataTarget: 'input.now',
+  dataTarget: 'chooseMax',
+  dataAggregate: 'first',
+  colorCriteria: 'now',
   weight: 3,
   opacity: 1,
   smoothFactor: 1,

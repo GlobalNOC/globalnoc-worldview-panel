@@ -1,14 +1,16 @@
 import { PanelPlugin } from '@grafana/data';
-import { SimpleOptions, MapViewInterface, LegendOptions, TopologyOptions } from './types';
+import { SimpleOptions, MapViewInterface, LegendOptions, TopologyOptions, DataMappingOptions } from './types';
 import { AtlasPanel } from './AtlasPanel';
 import { TextPanelEditor } from 'editors/TextPanelEditor';
 import { MapLayerEditor } from 'editors/MapLayerEditor';
 import { MapViewEditor } from 'editors/MapViewEditor';
+import { DataGroupEditor } from 'editors/DataGroupEditor';
 import { LegendEditor } from 'editors/LegendEditor';
 import { TopologyEditor } from 'editors/TopologyEditor';
 import AtlasOptions from './config/AtlasOptions.js';
 import pointHtml from './config/pointHtml.js';
 import lineHtml from './config/lineHtml.js';
+import { DataMappingEditor } from 'editors/DataMappingEditor';
 
 let defaultCustomMap = '{"adjacencies":[],"endpoints":{},"metadata":{},"name":"New Map"}';
 
@@ -50,6 +52,12 @@ let defaultTopologyOptions: TopologyOptions = {
       content: lineHtml,
     },
   },
+};
+
+let dataMappingDefaultOptions: DataMappingOptions = {
+  dataTarget: 'chooseMax',
+  dataAggregate: 'first',
+  colorCriteria: 'now',
 };
 
 export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions(builder => {
@@ -101,26 +109,17 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       editor: MapViewEditor,
       category: ['Map Appearance'],
     })
-    .addRadio({
+    .addBooleanSwitch({
       path: 'mapTile',
-      defaultValue: 'map',
-      name: 'Map Tiles',
-      settings: {
-        options: [
-          {
-            value: 'map',
-            label: 'Light',
-          },
-          {
-            value: 'satellite',
-            label: 'Satellite',
-          },
-          {
-            value: 'dark',
-            label: 'Dark',
-          },
-        ],
-      },
+      defaultValue: false,
+      name: 'Custom Map Tile',
+      category: ['Map Appearance'],
+    })
+    .addTextInput({
+      path: 'mapTileURL',
+      defaultValue: '',
+      name: 'Custom Map Tile URL',
+      showIf: config => config.mapTile === true,
       category: ['Map Appearance'],
     })
     .addBooleanSwitch({
@@ -153,5 +152,23 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       name: 'Topology Defaults',
       description: 'Edit/Update default values of topological layers.',
       category: ['Topology Options'],
+    })
+    .addCustomEditor({
+      id: 'dataAggregateGroups',
+      path: 'dataAggregateGroups',
+      name: 'Data Aggregate(s)',
+      description: 'Map Incoming Data To Circuits. Please Run the query again to see applied changes.',
+      defaultValue: [],
+      editor: DataGroupEditor,
+      category: ['Data Settings'],
+    })
+    .addCustomEditor({
+      id: 'dataMappings',
+      path: 'dataMappings',
+      name: 'Topology Coloring Options',
+      description: '',
+      defaultValue: dataMappingDefaultOptions,
+      editor: DataMappingEditor,
+      category: ['Data Settings'],
     });
 });

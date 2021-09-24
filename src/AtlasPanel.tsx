@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { PanelProps, SelectableValue, urlUtil } from '@grafana/data';
-import { SimpleOptions, CircuitDataType } from 'types';
+import { SimpleOptions } from 'types';
 import { v4 as uuidv4 } from 'uuid';
-import { DataUtil } from './util/DataUtil';
+// import { DataUtil } from './util/DataUtil';
 import { Select, Icon } from '@grafana/ui';
 import { cx } from 'emotion';
 import { getMapSelectorTheme } from './util/MapSelector';
@@ -23,22 +23,18 @@ interface FetchSession {
   [key: string]: string;
 }
 
-interface DataDictionary {
-  [key: string]: {
-    // Node Name
-    [key: string]: {
-      // Interface Name
-      input?: CircuitDataType[];
-      output?: CircuitDataType[];
-    };
-  };
+interface DataValue {
+  aggregate_group: string;
+  data_target: string;
+  values: Array<[number, number]>;
 }
 
 let editFromPanel = false;
 let fetchSession: FetchSession = {};
 let mapUpdated = false;
 let lastDataDictionaryCreated = '';
-let dataDictionary: DataDictionary = {};
+let dataValues: DataValue[] = [];
+// let dataDictionary: DataDictionary = {};
 let styles = getMapSelectorTheme(config.theme);
 
 export class AtlasPanel extends Component<Props, AtlasPanelState> {
@@ -166,7 +162,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     editorButton.style.display = 'none';
     if (atlas.editor.sidebar.sbContainer) {
       atlas.editor.hideToolbar();
-      atlas.editor.hideSidebar(); 
+      atlas.editor.hideSidebar();
     }
 
     atlas.removeAllTopologies();
@@ -235,11 +231,21 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
 
       // Remove all existing topologies and add new one
       atlas.removeAllTopologies();
-      atlas.addTopology(topology);
-      setData();
-      // if (!display) {
-      //   atlas.hideTopology(map.name);
-      // }
+      console.log(topology);
+      if (Array.isArray(topology)) {
+        for (const topo of topology) {
+          atlas.addTopology(topo);
+        }
+      } else {
+        atlas.addTopology(topology);
+      }
+
+      try {
+        setData();
+      } catch (error) {
+        console.log('Could not set data :(');
+      }
+
       reinforceView(lat, lng);
     }
   }
@@ -266,8 +272,21 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
 
   setMapTile() {
     let { atlas } = this.state;
-    let { mapTile } = this.props.options;
-    atlas.showTile(mapTile);
+    let { mapTile, mapTileURL } = this.props.options;
+
+    if (!mapTileURL) {
+      mapTileURL = '';
+    }
+
+    if (mapTile) {
+      atlas.addTile({
+        url: mapTileURL,
+        maxZoom: 20,
+        name: 'custom',
+      });
+    }
+
+    mapTile ? atlas.showTile('custom') : atlas.showTile('map');
   }
 
   setWeatherTile() {
@@ -285,12 +304,13 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     let { atlas } = this.state;
     let { legend } = this.props.options;
 
+    atlas.changeLegendProperty('lines', 'type', legend.type);
+    atlas.changeLegendValues('lines', legend.threshold, legend.colors);
+
     if (legend.display) {
       atlas.legends.lines.show();
       atlas.changeLegendProperty('lines', 'orientation', legend.orientation);
       atlas.changeLegendProperty('lines', 'size', legend.size + '%');
-      atlas.changeLegendProperty('lines', 'type', legend.type);
-      atlas.changeLegendValues('lines', legend.threshold, legend.colors);
 
       let labelBar = atlas.legends.lines.labelBar as HTMLDivElement;
       let labels = Array.from(labelBar.children) as HTMLDivElement[];
@@ -299,6 +319,15 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
       }
     } else {
       atlas.legends.lines.hide();
+    }
+  }
+
+  setDataMappingOptions() {
+    let { dataMappings } = this.props.options;
+    let { atlas } = this.state;
+
+    for (const property in dataMappings) {
+      atlas.changeCircuitColoringProperties(property, dataMappings[property]);
     }
   }
 
@@ -372,7 +401,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
 
   setTopologyData() {
     let { data } = this.props;
-
+    console.log('DATA', data);
     // Only create a new data dictionary if data is fetched again
     if (data.state === 'Done' && lastDataDictionaryCreated !== data.request!.requestId) {
       this.createDataDictionary();
@@ -382,73 +411,60 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
   }
 
   addDataToCircuits() {
-    let { topologies } = this.state.atlas;
-    let aggregateMetric = this.props.options.legend.target;
-
-    for (const topologyName in topologies) {
-      let { lines } = topologies[topologyName];
-
-      for (const line of lines) {
-        if (!line.metadata?.targets) {
-          continue;
-        }
-        let values: CircuitDataType[][] = [];
-        for (const target of line.metadata.targets) {
-          let node = target.node_name;
-          let intf = target.interface_name;
-          if (dataDictionary[node] && dataDictionary[node][intf]) {
-            if (dataDictionary[node][intf].input) {
-              values.push(dataDictionary[node][intf].input!);
-            }
-            if (dataDictionary[node][intf].output) {
-              values.push(dataDictionary[node][intf].output!);
-            }
-          }
-        }
-
-        let [inputAggregate, outputAggregate] = DataUtil.aggregateData(values, aggregateMetric);
-
-        if (inputAggregate) {
-          let dataObj = {
-            label: line.data.label,
-            input: { now: inputAggregate },
-            output: { now: outputAggregate },
-          };
-          if (line.metadata) {
-            dataObj = {
-              ...dataObj,
-              ...line.metadata,
-            };
-          }
-          line.set('data', dataObj);
-        }
-      }
-    }
+    this.state.atlas.applyData(dataValues);
+    this.setDataMappingOptions();
   }
 
   createDataDictionary() {
     let { series, request } = this.props.data;
     lastDataDictionaryCreated = request!.requestId;
-    dataDictionary = {};
+    dataValues = [];
+
+    let data_aggregates = this.props.options.dataAggregateGroups;
+
+    if (data_aggregates.length === 0) {
+      data_aggregates.push({
+        aggregate_group: 'data',
+        pattern: '.*',
+      });
+    }
+
     for (const data of series) {
       try {
-        let [node, intf, altIntf, value] = data.name!.split('+');
-        let values = data.fields[1].values['buffer'];
-        if (!dataDictionary[node]) {
-          dataDictionary[node] = {};
+        let data_target: string = data.name!;
+        let speeds = data.fields[1].values.toArray().reverse() as number[];
+        let timestamps = data.fields[0].values.toArray().reverse() as number[];
+
+        let values: Array<[number, number]> = [];
+
+        for (let i = 0; i < speeds.length; i++) {
+          const speed = speeds[i];
+          const time = timestamps[i];
+          values.push([time, speed]);
         }
-        if (!dataDictionary[node][intf]) {
-          dataDictionary[node][intf] = {};
-        }
-        dataDictionary[node][intf][value] = values;
-        if (intf !== altIntf) {
-          if (!dataDictionary[node][altIntf]) {
-            dataDictionary[node][altIntf] = {};
+
+        let aggregate_group: string | undefined;
+
+        for (const aggregates of data_aggregates) {
+          if (!aggregates.pattern) {
+            continue;
           }
-          dataDictionary[node][altIntf][value] = values;
+          let regex = new RegExp(aggregates.pattern);
+          if (regex.test(data_target)) {
+            aggregate_group = aggregates.aggregate_group;
+            break;
+          }
+        }
+
+        if (aggregate_group) {
+          dataValues.push({
+            data_target,
+            values,
+            aggregate_group,
+          });
         }
       } catch (error) {
-        dataDictionary = {};
+        dataValues = [];
         return;
       }
     }

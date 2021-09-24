@@ -1,9 +1,9 @@
 import React, { FC, useState } from 'react';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme, Switch, RadioButtonGroup, ColorPicker, Input, Select } from '@grafana/ui';
+import { stylesFactory, useTheme, Switch, RadioButtonGroup, ColorPicker, Input } from '@grafana/ui';
 import { GrafanaTheme, StandardEditorProps } from '@grafana/data';
 
-import { LegendOptions, SimpleOptions, TargetType } from '../types';
+import { LegendOptions, SimpleOptions } from '../types';
 
 export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOptions>> = ({
   value,
@@ -164,22 +164,6 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
       </div>
 
       <div className={cx(styles.inputContainer)}>
-        <span className={cx(styles.layerName)}>Data Aggregation</span>
-        <Select
-          onChange={e => {
-            onChange({ ...value, target: e.value as TargetType });
-          }}
-          options={[
-            { label: 'Latest', value: 'latest' },
-            { label: 'Mean', value: 'mean' },
-            { label: 'Min', value: 'min' },
-            { label: 'Max', value: 'max' },
-          ]}
-          value={{ label: properCase(value.target), value: value.target }}
-        />
-      </div>
-
-      <div className={cx(styles.inputContainer)}>
         <span className={cx(styles.layerName)}>Threshold</span>
         <Input
           css={{}}
@@ -195,11 +179,6 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
     </div>
   );
 };
-
-// Util Functions
-function properCase(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
 const getStyles = stylesFactory((theme: GrafanaTheme) => ({
   editorBox: css`
