@@ -3,33 +3,10 @@ sidebar_position: 1
 ---
 
 # Introduction
+## Network Map Panel for Grafana
+The Worldview Panel is a world map that provides the ability to monitor and visualize realtime traffic statistics. It uses timeseries data to represent traffic between nodes as circuits. It provides this information when hovered over the circuits and nodes.
 
-Let's discover **Docusaurus in less than 5 minutes**.
+![Multiple Data Points Tooltip](../static/img/intro-image.png)
 
-## Getting Started
-
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**:
-
-```shell
-npx @docusaurus/init@latest init my-website classic
-```
-
-## Start your site
-
-Run the development server:
-
-```shell
-cd my-website
-
-npx docusaurus start
-```
-
-Your site starts at `http://localhost:3000`.
-
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and display your changes.
+## Features
+The Network Map Panel also provides the ability to configure different map options and display options. 
