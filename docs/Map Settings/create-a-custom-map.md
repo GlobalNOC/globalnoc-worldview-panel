@@ -10,7 +10,7 @@ To create a map inside the dashboard locally, open the `Map Settings` tab and se
 
 ![Editor Map](../../static/img/atlas/editor_overview.png)
 
-<p>Clicking on the pen <img src={useBaseUrl('../../static/img/atlas/pen.png')} width="12"/> in the upper right corner toggles the atlas editor. The toolbar displays the set of all tools available to edit a map:</p>
+<p>Clicking on the pen <img src="https://github.com/GlobalNOC/globalnoc-worldview-panel/blob/main/docs/img/pen.png" width="12"/> in the upper right corner toggles the atlas editor. The toolbar displays the set of all tools available to edit a map:</p>
 
 |                                      Icon                                      | Tool          | Description                   |
 | :----------------------------------------------------------------------------: | ------------- | ----------------------------- |
