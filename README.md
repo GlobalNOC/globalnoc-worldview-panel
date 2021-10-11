@@ -1,15 +1,14 @@
 # GlobalNOC Worldview Panel
 
-The Network Map Panel is a world map that provides the ability to monitor and visualize realtime traffic statistics. It uses timeseries data to represent traffic between nodes as circuits. It provides this information when hovered over the circuits and nodes.
+The Worldview Map Panel is a world map that provides the ability to monitor and visualize realtime traffic statistics. It uses timeseries data to represent traffic between nodes as circuits. It provides this information when hovered over the circuits and nodes.
 
-This template is a starting point for building Grafana Panel Plugins in Grafana 7.0+
+![Intro Image](./docs/img/intro-image.png)
 
-## What is Grafana Panel Plugin?
+## Features
+The Worldview Map Panel also provides the ability to configure different map options and display options. 
 
-Panels are the building blocks of Grafana. They allow you to visualize data in different ways. While Grafana has several types of panels already built-in, you can also build your own panel, to add support for other visualizations.
-
-For more information about panels, refer to the documentation on [Panels](https://grafana.com/docs/grafana/latest/features/panels/panels/)
-
+## Documentation
+For more information on how to use the Worldview Panel, check out our [Documentation Page](https://globalnoc.github.io/globalnoc-worldview-panel/docs/intro)
 ## Installation
 
 1. Install dependencies
