@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkgrafana_panel_docs=self.webpackChunkgrafana_panel_docs||[]).push([[2708],{3210:function(a){a.exports=JSON.parse('{"allTagsPath":"/globalnoc-worldview-panel/blog/tags","slug":"/globalnoc-worldview-panel/blog/tags/greetings","name":"greetings","count":1,"permalink":"/globalnoc-worldview-panel/blog/tags/greetings"}')}}]);

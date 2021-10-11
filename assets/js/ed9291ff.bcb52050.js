@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkgrafana_panel_docs=self.webpackChunkgrafana_panel_docs||[]).push([[9088],{8703:function(e){e.exports=JSON.parse('{"permalink":"/globalnoc-worldview-panel/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":5,"previousPage":null,"nextPage":null,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
