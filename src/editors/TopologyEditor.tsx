@@ -1,8 +1,15 @@
 import React, { FC } from 'react';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme, ColorPicker, Switch } from '@grafana/ui';
+import {
+  stylesFactory,
+  useTheme,
+  ColorPicker,
+  Switch,
+  CodeEditor,
+  CodeEditorSuggestionItem,
+  variableSuggestionToCodeEditorSuggestion,
+} from '@grafana/ui';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { CodeEditor, CodeEditorSuggestionItem, variableSuggestionToCodeEditorSuggestion } from '@grafana/ui';
 import { GrafanaTheme, StandardEditorProps } from '@grafana/data';
 import { TopologyOptions, SimpleOptions } from '../types';
 import pointHtml from '../config/pointHtml.js';
@@ -20,7 +27,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
     if (!context.getSuggestions) {
       return [];
     }
-    return context.getSuggestions().map(v => variableSuggestionToCodeEditorSuggestion(v));
+    return context.getSuggestions().map((v) => variableSuggestionToCodeEditorSuggestion(v));
   };
 
   const handleColorChange = (color: string, layer: 'point' | 'line') => {
@@ -59,8 +66,8 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
               return (
                 <CodeEditor
                   value={value['point'].tooltip.content}
-                  onBlur={content => handleTooltipContentChange(content, 'point')}
-                  onSave={content => handleTooltipContentChange(content, 'point')}
+                  onBlur={(content) => handleTooltipContentChange(content, 'point')}
+                  onSave={(content) => handleTooltipContentChange(content, 'point')}
                   language={'html'}
                   width={width}
                   showMiniMap={false}
@@ -89,8 +96,8 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
               return (
                 <CodeEditor
                   value={value['line'].tooltip.content}
-                  onBlur={content => handleTooltipContentChange(content, 'line')}
-                  onSave={content => handleTooltipContentChange(content, 'line')}
+                  onBlur={(content) => handleTooltipContentChange(content, 'line')}
+                  onSave={(content) => handleTooltipContentChange(content, 'line')}
                   language={'html'}
                   width={width}
                   showMiniMap={false}
@@ -116,7 +123,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
         <span className={cx(styles.colorPickerWrapper)}>
           <ColorPicker
             color={value.point.color}
-            onChange={val => handleColorChange(val, 'point')}
+            onChange={(val) => handleColorChange(val, 'point')}
             enableNamedColors={false}
           />
         </span>
@@ -127,7 +134,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
           <span className={cx(styles.layerNameInlineBlock)}>Display Tooltip</span>
           <Switch
             value={value.point.tooltip.display}
-            css={{ display: 'inline-block' }}
+            style={{ display: 'inline-block' }}
             onChange={() => handleTooltipOptionsChange('display', 'point')}
           />
         </div>
@@ -135,7 +142,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
           <span className={cx(styles.layerNameInlineBlock)}>Static Tooltip</span>
           <Switch
             value={value.point.tooltip.static}
-            css={{ display: 'inline-block' }}
+            style={{ display: 'inline-block' }}
             onChange={() => handleTooltipOptionsChange('static', 'point')}
           />
         </div>
@@ -143,7 +150,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
           <span className={cx(styles.layerNameInlineBlock)}>Custom Tooltip</span>
           <Switch
             value={value.point.tooltip.custom}
-            css={{ display: 'inline-block' }}
+            style={{ display: 'inline-block' }}
             onChange={() => handleTooltipOptionsChange('custom', 'point')}
           />
         </div>
@@ -157,7 +164,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
         <span className={cx(styles.colorPickerWrapper)}>
           <ColorPicker
             color={value.line.color}
-            onChange={val => handleColorChange(val, 'line')}
+            onChange={(val) => handleColorChange(val, 'line')}
             enableNamedColors={false}
           />
         </span>
@@ -168,7 +175,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
           <span className={cx(styles.layerNameInlineBlock)}>Display Tooltip</span>
           <Switch
             value={value.line.tooltip.display}
-            css={{ display: 'inline-block' }}
+            style={{ display: 'inline-block' }}
             onChange={() => handleTooltipOptionsChange('display', 'line')}
           />
         </div>
@@ -176,7 +183,7 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
           <span className={cx(styles.layerNameInlineBlock)}>Custom Tooltip</span>
           <Switch
             value={value.line.tooltip.custom}
-            css={{ display: 'inline-block' }}
+            style={{ display: 'inline-block' }}
             onChange={() => handleTooltipOptionsChange('custom', 'line')}
           />
         </div>

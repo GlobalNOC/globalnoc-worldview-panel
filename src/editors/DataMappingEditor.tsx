@@ -106,7 +106,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           Choose a calculation to perform when multiple datapoints are found for a single data aggregate group
         </span>
         <Select
-          onChange={e => {
+          onChange={(e) => {
             onChange({
               ...value,
               dataAggregate: e.value!,
@@ -135,7 +135,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           Choose a reducer function / calculation to reduce data to a single value
         </span>
         <Select
-          onChange={e => {
+          onChange={(e) => {
             onChange({
               ...value,
               colorCriteria: e.value!,
@@ -157,7 +157,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           Select a data aggregate group / calculation to color circuits on
         </span>
         <Select
-          onChange={e => {
+          onChange={(e) => {
             onChange({
               ...value,
               dataTarget: e.value!,

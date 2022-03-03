@@ -35,6 +35,7 @@ let mapUpdated = false;
 let lastDataDictionaryCreated = '';
 let dataValues: DataValue[] = [];
 // let dataDictionary: DataDictionary = {};
+// @ts-ignore
 let styles = getMapSelectorTheme(config.theme);
 
 export class AtlasPanel extends Component<Props, AtlasPanelState> {
@@ -350,7 +351,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     for (const t in atlas.topologies) {
       let topology = atlas.topologies[t];
 
-      topology.points.forEach(p => {
+      topology.points.forEach((p) => {
         p.color = topologyOptions.point.color;
         p.fill = topologyOptions.point.color;
 
@@ -377,7 +378,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
         p.update();
       });
 
-      topology.lines.forEach(l => {
+      topology.lines.forEach((l) => {
         l.options.color = topologyOptions.line.color;
         let display = topologyOptions.line.tooltip.display;
 
@@ -491,7 +492,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     if (atlas) {
       let topologies = Object.keys(atlas.topologies);
 
-      let options = topologies.map(topologyName => {
+      let options = topologies.map((topologyName) => {
         let topology = atlas.topologies[topologyName];
         let derivedName = topology.metadata?.grafana_alias || topology.name;
         return { label: derivedName, value: derivedName };
@@ -520,11 +521,11 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     let { mapURLs } = this.props.options;
 
     let topologyNames = Object.keys(atlas.topologies);
-    let selectedTopologies = selectedValues.map(val => val.value);
+    let selectedTopologies = selectedValues.map((val) => val.value);
 
-    topologyNames.forEach(name => atlas.hideTopology(name));
+    topologyNames.forEach((name) => atlas.hideTopology(name));
 
-    selectedTopologies.forEach(name => {
+    selectedTopologies.forEach((name) => {
       let topologies = atlas.topologies;
 
       for (const topologyName in topologies) {
@@ -578,7 +579,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
           <div className={cx(styles.slectorWrapper)}>
             <span className={cx(styles.layerName)}>Maps</span>
             <Select
-              onChange={e => {
+              onChange={(e) => {
                 this.setLayerDisplay(e);
               }}
               isMulti={true}
@@ -588,8 +589,8 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
           </div>
           <div
             className={cx(styles.toggleMapSelectorArea)}
-            onClick={e =>
-              this.setState(s => {
+            onClick={(e) =>
+              this.setState((s) => {
                 return { mapSelectorDisplay: !s.mapSelectorDisplay };
               })
             }

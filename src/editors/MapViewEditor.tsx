@@ -93,8 +93,8 @@ export const MapViewEditor: FC<StandardEditorProps<MapViewInterface, any, TextOp
       <div>
         <input
           className={cx(styles.inputText)}
-          onBlur={e => updateValues(e, 'lat')}
-          onChange={e => handleChange(e, 'lat')}
+          onBlur={(e) => updateValues(e, 'lat')}
+          onChange={(e) => handleChange(e, 'lat')}
           type="text"
           value={lat}
         />
@@ -103,8 +103,8 @@ export const MapViewEditor: FC<StandardEditorProps<MapViewInterface, any, TextOp
       <div>
         <input
           className={cx(styles.inputText)}
-          onBlur={e => updateValues(e, 'lng')}
-          onChange={e => handleChange(e, 'lng')}
+          onBlur={(e) => updateValues(e, 'lng')}
+          onChange={(e) => handleChange(e, 'lng')}
           type="text"
           value={lng}
         />
@@ -113,8 +113,8 @@ export const MapViewEditor: FC<StandardEditorProps<MapViewInterface, any, TextOp
       <div>
         <input
           className={cx(styles.inputText)}
-          onBlur={e => updateValues(e, 'zoom')}
-          onChange={e => handleChange(e, 'zoom')}
+          onBlur={(e) => updateValues(e, 'zoom')}
+          onChange={(e) => handleChange(e, 'zoom')}
           type="text"
           value={zoom}
         />

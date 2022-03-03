@@ -67,14 +67,14 @@ export const MapLayerEditor: FC<StandardEditorProps<MapUrl, any, TextOptions>> =
                   cursor: 'pointer',
                 }}
                 name={'trash-alt'}
-                onClick={e => handleDelete(id)}
+                onClick={(e) => handleDelete(id)}
               />
             </span>
           </div>
           <input
             className={cx(styles.inputText)}
-            onChange={e => handleChange(e, id, 'name')}
-            onBlur={e => setIsFocused(false)}
+            onChange={(e) => handleChange(e, id, 'name')}
+            onBlur={(e) => setIsFocused(false)}
             type="text"
             placeholder="Map Name"
             value={urlObj[id]['name']}
@@ -82,8 +82,8 @@ export const MapLayerEditor: FC<StandardEditorProps<MapUrl, any, TextOptions>> =
           <span className={cx(styles.inputLabel)}>URL</span>
           <input
             className={cx(styles.inputText)}
-            onChange={e => handleChange(e, id, 'url')}
-            onBlur={e => setIsFocused(false)}
+            onChange={(e) => handleChange(e, id, 'url')}
+            onBlur={(e) => setIsFocused(false)}
             type="text"
             placeholder="URL"
             value={urlObj[id]['url']}
@@ -106,7 +106,7 @@ export const MapLayerEditor: FC<StandardEditorProps<MapUrl, any, TextOptions>> =
   return (
     <div className={cx(styles.editorBox)}>
       {layers}
-      <button onClick={e => addLayer()} className={cx(styles.addLayer)}>
+      <button onClick={(e) => addLayer()} className={cx(styles.addLayer)}>
         + Add Layer
       </button>
     </div>

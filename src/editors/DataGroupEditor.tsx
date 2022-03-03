@@ -83,14 +83,14 @@ export const DataGroupEditor: FC<StandardEditorProps<DataAggregateGroup[], any, 
                   cursor: 'pointer',
                 }}
                 name={'trash-alt'}
-                onClick={e => handleDelete(group)}
+                onClick={(e) => handleDelete(group)}
               />
             </span>
           </div>
           <input
             className={cx(styles.inputText)}
-            onChange={e => handleChange(e, group, 'aggregate_group')}
-            onBlur={e => setIsFocused(false)}
+            onChange={(e) => handleChange(e, group, 'aggregate_group')}
+            onBlur={(e) => setIsFocused(false)}
             type="text"
             placeholder="Value"
             value={group.aggregate_group}
@@ -98,8 +98,8 @@ export const DataGroupEditor: FC<StandardEditorProps<DataAggregateGroup[], any, 
           <span className={cx(styles.inputLabel)}>RegEx Pattern</span>
           <input
             className={cx(styles.inputText)}
-            onChange={e => handleChange(e, group, 'pattern')}
-            onBlur={e => setIsFocused(false)}
+            onChange={(e) => handleChange(e, group, 'pattern')}
+            onBlur={(e) => setIsFocused(false)}
             type="text"
             placeholder="RegEx"
             value={group.pattern}
@@ -125,7 +125,7 @@ export const DataGroupEditor: FC<StandardEditorProps<DataAggregateGroup[], any, 
   return (
     <div className={cx(styles.editorBox)}>
       {layers}
-      <button onClick={e => addLayer()} className={cx(styles.addLayer)}>
+      <button onClick={(e) => addLayer()} className={cx(styles.addLayer)}>
         + Add Group
       </button>
     </div>

@@ -48,8 +48,8 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
 
     return colors.map((color, idx) => {
       return (
-        <span className={cx(styles.colorPickerWrapper)}>
-          <ColorPicker color={color} enableNamedColors={false} onChange={value => handleColorChange(idx, value)} />
+        <span className={cx(styles.colorPickerWrapper)} key={idx}>
+          <ColorPicker color={color} enableNamedColors={false} onChange={(value) => handleColorChange(idx, value)} />
         </span>
       );
     });
@@ -60,7 +60,7 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
     setThreshold(inputValue);
 
     let thresholdsFromInput = inputValue.split(',');
-    let incorrectEntries = thresholdsFromInput.filter(val => val === '' || isNaN(Number(val)));
+    let incorrectEntries = thresholdsFromInput.filter((val) => val === '' || isNaN(Number(val)));
 
     if (incorrectEntries.length === 0) {
       let previousThreshold = value.threshold;
@@ -114,7 +114,7 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
     <div className={cx(styles.editorBox)}>
       <div className={cx(styles.inputContainer)}>
         <span className={cx(styles.layerName)}>Legend Display</span>
-        <Switch value={value.display} css={{ display: 'block' }} onChange={handledisplayChange} />
+        <Switch value={value.display} style={{ display: 'block' }} onChange={handledisplayChange} />
       </div>
 
       <div className={cx(styles.inputContainer)}>
@@ -147,7 +147,7 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
           <ColorPicker
             color={value.textColor}
             enableNamedColors={false}
-            onChange={value => handleLegendTextChange(value)}
+            onChange={(value) => handleLegendTextChange(value)}
           />
         </span>
       </div>
@@ -155,21 +155,17 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
       <div className={cx(styles.inputContainer)}>
         <span className={cx(styles.layerName)}>Size (% of container size)</span>
         <Input
-          css={'width: 50%;'}
+          style={{ width: '50%' }}
           width={20}
           value={size}
-          onBlur={e => handleSizeChangeOnBlur(e as React.ChangeEvent<HTMLInputElement>)}
-          onChange={e => handleSizeChange(e as React.ChangeEvent<HTMLInputElement>)}
+          onBlur={(e) => handleSizeChangeOnBlur(e as React.ChangeEvent<HTMLInputElement>)}
+          onChange={(e) => handleSizeChange(e as React.ChangeEvent<HTMLInputElement>)}
         />
       </div>
 
       <div className={cx(styles.inputContainer)}>
         <span className={cx(styles.layerName)}>Threshold</span>
-        <Input
-          css={{}}
-          value={threshold}
-          onChange={e => handleThresholdChange(e as React.ChangeEvent<HTMLInputElement>)}
-        />
+        <Input value={threshold} onChange={(e) => handleThresholdChange(e as React.ChangeEvent<HTMLInputElement>)} />
       </div>
 
       <div className={cx(styles.inputContainer)}>
