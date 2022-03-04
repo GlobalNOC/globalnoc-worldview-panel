@@ -550,19 +550,27 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
 
   configureAtlasEditorDisplay() {
     let { atlas, mapID } = this.state;
-    // If edit mode is off turn off editor and remove all editing tool buttons
-    // Make them visible when back in edit mode
+
+    /* 
+    TODO: Maybe this would be cleaner/faster if I query Doc for the toolbar,
+      query subset of controls from first result.
+    */
     const params = urlUtil.getUrlSearchParams();
     if (params.editPanel != null && atlas) {
-      let control = document.querySelector(`#${mapID} .leaflet-control-zoom`) as HTMLDivElement;
-      control.style.display = '';
+      // When in edit mode, enable mousewheel scrolling and show all toolbar elements
+      atlas.map.scrollWheelZoom.enable();
+      document
+        .querySelectorAll<HTMLElement>(`#${mapID} .leaflet-control-zoom a`)
+        .forEach((e) => (e.style.display = ''));
     } else if (atlas) {
-      let control = document.querySelector(`#${mapID} .leaflet-control-zoom`) as HTMLDivElement;
-      control.style.display = 'none';
+      // Otherwise, disable scrolling, hide any toolbar elements that aren't zoom controls
+      atlas.map.scrollWheelZoom.disable();
+      document
+        .querySelectorAll<HTMLElement>(`#${mapID} .leaflet-control-zoom :not([class*=leaflet-control-zoom-])`)
+        .forEach((e) => (e.style.display = 'none'));
 
       atlas.editor.disableAllModes();
       if (atlas.editor.sidebar.sbContainer) {
-        atlas.editor.hideToolbar();
         atlas.editor.hideSidebar();
       }
     }
