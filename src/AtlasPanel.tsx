@@ -580,7 +580,17 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     return (
       <div
         id={this.state.mapWrapperID}
-        style={{ position: 'relative', overflow: 'hidden', height: this.props.height, width: this.props.width }}
+        style={{
+          position: 'relative',
+          /*  
+          The below value was set s.t. it was below a grafana panel header z-index of 10
+          Otherwise, this panel would obscure the panel header dropdown on the Grafana dash.
+          Ideally, this value could be set as an offset of the z-index of whatever div or element is above us.
+          */
+          zIndex: 9,
+          height: this.props.height,
+          width: this.props.width,
+        }}
       >
         <div id={this.state.mapID} style={{ height: '100%' }}></div>
         <div className={this.getMapSelectorClass().join(' ')}>
