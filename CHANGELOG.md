@@ -1,5 +1,11 @@
 # Changelog
 
+## GRNOC Worldview Plugin 1.1.1 -- Thu 17 Mar 2022
+* Zoom (in/ out/ min) controls remain visible in presentation view
+* Other toolbar controls (edit/ show|hide layers) are revealed when in edit view
+* Topology tooltips now reposition around their cursor event in cases where they would otherwise render outside the viewable panel area.
+* Fixed a bug where panels without a title would render over/obscure the panel header dropdown menu.
+
 ## GRNOC Worldview Plugin 1.1.0 -- Fri Sep 2021
 * More Universal Data Mapping
 * Bug Fixes
