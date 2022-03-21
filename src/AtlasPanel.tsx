@@ -35,6 +35,7 @@ let mapUpdated = false;
 let lastDataDictionaryCreated = '';
 let dataValues: DataValue[] = [];
 // let dataDictionary: DataDictionary = {};
+// @ts-ignore
 let styles = getMapSelectorTheme(config.theme);
 
 export class AtlasPanel extends Component<Props, AtlasPanelState> {
@@ -350,7 +351,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     for (const t in atlas.topologies) {
       let topology = atlas.topologies[t];
 
-      topology.points.forEach(p => {
+      topology.points.forEach((p) => {
         p.color = topologyOptions.point.color;
         p.fill = topologyOptions.point.color;
 
@@ -377,7 +378,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
         p.update();
       });
 
-      topology.lines.forEach(l => {
+      topology.lines.forEach((l) => {
         l.options.color = topologyOptions.line.color;
         let display = topologyOptions.line.tooltip.display;
 
@@ -491,7 +492,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     if (atlas) {
       let topologies = Object.keys(atlas.topologies);
 
-      let options = topologies.map(topologyName => {
+      let options = topologies.map((topologyName) => {
         let topology = atlas.topologies[topologyName];
         let derivedName = topology.metadata?.grafana_alias || topology.name;
         return { label: derivedName, value: derivedName };
@@ -520,11 +521,11 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     let { mapURLs } = this.props.options;
 
     let topologyNames = Object.keys(atlas.topologies);
-    let selectedTopologies = selectedValues.map(val => val.value);
+    let selectedTopologies = selectedValues.map((val) => val.value);
 
-    topologyNames.forEach(name => atlas.hideTopology(name));
+    topologyNames.forEach((name) => atlas.hideTopology(name));
 
-    selectedTopologies.forEach(name => {
+    selectedTopologies.forEach((name) => {
       let topologies = atlas.topologies;
 
       for (const topologyName in topologies) {
@@ -549,19 +550,27 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
 
   configureAtlasEditorDisplay() {
     let { atlas, mapID } = this.state;
-    // If edit mode is off turn off editor and remove all editing tool buttons
-    // Make them visible when back in edit mode
+
+    /* 
+    TODO: Maybe this would be cleaner/faster if I query Doc for the toolbar,
+      query subset of controls from first result.
+    */
     const params = urlUtil.getUrlSearchParams();
     if (params.editPanel != null && atlas) {
-      let control = document.querySelector(`#${mapID} .leaflet-control-zoom`) as HTMLDivElement;
-      control.style.display = '';
+      // When in edit mode, enable mousewheel scrolling and show all toolbar elements
+      atlas.map.scrollWheelZoom.enable();
+      document
+        .querySelectorAll<HTMLElement>(`#${mapID} .leaflet-control-zoom a`)
+        .forEach((e) => (e.style.display = ''));
     } else if (atlas) {
-      let control = document.querySelector(`#${mapID} .leaflet-control-zoom`) as HTMLDivElement;
-      control.style.display = 'none';
+      // Otherwise, disable scrolling, hide any toolbar elements that aren't zoom controls
+      atlas.map.scrollWheelZoom.disable();
+      document
+        .querySelectorAll<HTMLElement>(`#${mapID} .leaflet-control-zoom :not([class*=leaflet-control-zoom-])`)
+        .forEach((e) => (e.style.display = 'none'));
 
       atlas.editor.disableAllModes();
       if (atlas.editor.sidebar.sbContainer) {
-        atlas.editor.hideToolbar();
         atlas.editor.hideSidebar();
       }
     }
@@ -571,14 +580,24 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     return (
       <div
         id={this.state.mapWrapperID}
-        style={{ position: 'relative', overflow: 'hidden', height: this.props.height, width: this.props.width }}
+        style={{
+          position: 'relative',
+          /*  
+          The below value was set s.t. it was below a grafana panel header z-index of 10
+          Otherwise, this panel would obscure the panel header dropdown on the Grafana dash.
+          Ideally, this value could be set as an offset of the z-index of whatever div or element is above us.
+          */
+          zIndex: 9,
+          height: this.props.height,
+          width: this.props.width,
+        }}
       >
         <div id={this.state.mapID} style={{ height: '100%' }}></div>
         <div className={this.getMapSelectorClass().join(' ')}>
           <div className={cx(styles.slectorWrapper)}>
             <span className={cx(styles.layerName)}>Maps</span>
             <Select
-              onChange={e => {
+              onChange={(e) => {
                 this.setLayerDisplay(e);
               }}
               isMulti={true}
@@ -588,8 +607,8 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
           </div>
           <div
             className={cx(styles.toggleMapSelectorArea)}
-            onClick={e =>
-              this.setState(s => {
+            onClick={(e) =>
+              this.setState((s) => {
                 return { mapSelectorDisplay: !s.mapSelectorDisplay };
               })
             }

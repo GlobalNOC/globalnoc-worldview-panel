@@ -60,7 +60,7 @@ let dataMappingDefaultOptions: DataMappingOptions = {
   colorCriteria: 'now',
 };
 
-export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions(builder => {
+export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions((builder) => {
   return builder
     .addRadio({
       path: 'mapType',
@@ -87,7 +87,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       description: 'Edit map using the Atlas Editor or Manually configure the JSON',
       defaultValue: { content: JSON.stringify(JSON.parse(defaultCustomMap), null, 2), mode: 'json' },
       editor: TextPanelEditor,
-      showIf: config => config.mapType === 'custom',
+      showIf: (config) => config.mapType === 'custom',
       category: ['Map Settings'],
     })
     .addCustomEditor({
@@ -97,7 +97,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       description: 'Add Map Name and a link to its JSON map',
       defaultValue: {},
       editor: MapLayerEditor,
-      showIf: config => config.mapType === 'url',
+      showIf: (config) => config.mapType === 'url',
       category: ['Map Settings'],
     })
     .addCustomEditor({
@@ -119,7 +119,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       path: 'mapTileURL',
       defaultValue: '',
       name: 'Custom Map Tile URL',
-      showIf: config => config.mapTile === true,
+      showIf: (config) => config.mapTile === true,
       category: ['Map Appearance'],
     })
     .addBooleanSwitch({

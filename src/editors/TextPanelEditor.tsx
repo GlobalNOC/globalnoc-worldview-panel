@@ -26,7 +26,7 @@ export const TextPanelEditor: FC<StandardEditorProps<TextOptions, any, SimpleOpt
     if (!context.getSuggestions) {
       return [];
     }
-    return context.getSuggestions().map(v => variableSuggestionToCodeEditorSuggestion(v));
+    return context.getSuggestions().map((v) => variableSuggestionToCodeEditorSuggestion(v));
   };
 
   const handleChange = (value: string) => {
