@@ -5,10 +5,12 @@ import { stylesFactory } from '@grafana/ui';
 export const getMapSelectorTheme = stylesFactory((theme: GrafanaTheme) => ({
   mapSelectorContainer: css`
     position: absolute;
+    display: flex;
+    max-height: 150px;
+    min-height: 100px;
     max-width: 250px;
-    min-width: 200px;
     background: ${theme.colors.bg1};
-    top: 0;
+    top: 32px;
     right: 0;
     z-index: 1000;
   `,
@@ -16,9 +18,11 @@ export const getMapSelectorTheme = stylesFactory((theme: GrafanaTheme) => ({
     display: none;
   `,
   mapSelectorCollapsed: css`
-    transform: translateY(calc(-100% + 20px));
+    & > div:last-child {
+      display: none;
+    }
   `,
-  slectorWrapper: css`
+  selectorWrapper: css`
     padding: 10px;
   `,
   layerName: css`
@@ -29,11 +33,10 @@ export const getMapSelectorTheme = stylesFactory((theme: GrafanaTheme) => ({
     margin-bottom: 4px;
   `,
   toggleMapSelectorArea: css`
-    display: block;
+    display: flex;
     border-top: 1px solid ${theme.colors.border1}
-    height: 20px;
     background: ${theme.colors.bg2};
-    text-align: center;
+    align-items: center;
     cursor: pointer;
     &:hover {
       background: ${theme.colors.bg3};

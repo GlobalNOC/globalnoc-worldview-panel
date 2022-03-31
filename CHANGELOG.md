@@ -1,5 +1,9 @@
 # Changelog
 
+## GRNOC Worldview Plugin 1.1.2 -- Thu 31 Mar 2022
+* Bugfix for map selector panel. When enabled, panel now anchors to right-side, and slides out to the left.
+* Map selector panel no longer anchors to top, interfering with untitled panel header.
+
 ## GRNOC Worldview Plugin 1.1.1 -- Thu 17 Mar 2022
 * Zoom (in/ out/ min) controls remain visible in presentation view
 * Other toolbar controls (edit/ show|hide layers) are revealed when in edit view

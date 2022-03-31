@@ -594,7 +594,17 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
       >
         <div id={this.state.mapID} style={{ height: '100%' }}></div>
         <div className={this.getMapSelectorClass().join(' ')}>
-          <div className={cx(styles.slectorWrapper)}>
+          <div
+            className={cx(styles.toggleMapSelectorArea)}
+            onClick={(e) =>
+              this.setState((s) => {
+                return { mapSelectorDisplay: !s.mapSelectorDisplay };
+              })
+            }
+          >
+            <Icon name={this.state.mapSelectorDisplay ? 'angle-right' : 'angle-left'} size="lg" />
+          </div>
+          <div className={cx(styles.selectorWrapper)}>
             <span className={cx(styles.layerName)}>Maps</span>
             <Select
               onChange={(e) => {
@@ -604,16 +614,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
               options={this.getAllMapLayers()}
               value={this.getSelectedMapLayers()}
             />
-          </div>
-          <div
-            className={cx(styles.toggleMapSelectorArea)}
-            onClick={(e) =>
-              this.setState((s) => {
-                return { mapSelectorDisplay: !s.mapSelectorDisplay };
-              })
-            }
-          >
-            <Icon name={this.state.mapSelectorDisplay ? 'angle-up' : 'angle-down'} size="lg" />
           </div>
         </div>
       </div>
