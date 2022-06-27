@@ -13,6 +13,7 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
   const theme = useTheme();
   const styles = getStyles(theme);
   let [threshold, setThreshold] = useState<string>(value.threshold.join(','));
+  let [unit, setUnit] = useState<string>(value.unit);
   let [size, setSize] = useState<string>(value.size);
 
   const handledisplayChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -35,6 +36,13 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
     if (val) {
       onChange({ ...value, textColor: val });
     }
+  };
+
+  const handleUnitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) {
+      onChange({ ...value, unit: e.target.value });
+    }
+    setUnit(e.target.value);
   };
 
   const handleColorChange = (idx: number, val: string) => {
@@ -161,6 +169,11 @@ export const LegendEditor: FC<StandardEditorProps<LegendOptions, any, SimpleOpti
           onBlur={(e) => handleSizeChangeOnBlur(e as React.ChangeEvent<HTMLInputElement>)}
           onChange={(e) => handleSizeChange(e as React.ChangeEvent<HTMLInputElement>)}
         />
+      </div>
+
+      <div className={cx(styles.inputContainer)}>
+        <span className={cx(styles.layerName)}>Unit</span>
+        <Input value={unit} onChange={(e) => handleUnitChange(e as React.ChangeEvent<HTMLInputElement>)} />
       </div>
 
       <div className={cx(styles.inputContainer)}>

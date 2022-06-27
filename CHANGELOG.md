@@ -1,5 +1,9 @@
 # Changelog
 
+## GRNOC Worldview Plugin 1.2.0 -- Thu 31 Mar 2022
+* Reads data from Dataframes now
+* Updated Atlas version that accepts negative unit types
+
 ## GRNOC Worldview Plugin 1.1.2 -- Thu 31 Mar 2022
 * Bugfix for map selector panel. When enabled, panel now anchors to right-side, and slides out to the left.
 * Map selector panel no longer anchors to top, interfering with untitled panel header.

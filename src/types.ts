@@ -59,6 +59,7 @@ export interface LegendOptions {
   size: string;
   target: TargetType;
   textColor: string;
+  unit: string;
 }
 
 export interface TopologyOptions {

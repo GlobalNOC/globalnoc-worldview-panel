@@ -75,6 +75,8 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     // Rerender will happen whenever the hieght/width of container is resized
     if (this.state.atlas) {
       this.state.atlas.map.invalidateSize();
+      // @ts-ignore
+      window.atlas = this.state.atlas;
     }
     this.configureAtlasEditorDisplay();
     if (editFromPanel) {
@@ -306,6 +308,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     let { legend } = this.props.options;
 
     atlas.changeLegendProperty('lines', 'type', legend.type);
+    atlas.changeLegendProperty('lines', 'units', legend.unit);
     atlas.changeLegendValues('lines', legend.threshold, legend.colors);
 
     if (legend.display) {
@@ -326,7 +329,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
   setDataMappingOptions() {
     let { dataMappings } = this.props.options;
     let { atlas } = this.state;
-
+    console.log('DATA MAPPING', dataMappings);
     for (const property in dataMappings) {
       atlas.changeCircuitColoringProperties(property, dataMappings[property]);
     }
@@ -412,6 +415,7 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
   }
 
   addDataToCircuits() {
+    console.log('ADD DATA TO CIRCUITS', dataValues);
     this.state.atlas.applyData(dataValues);
     this.setDataMappingOptions();
   }
@@ -431,15 +435,24 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     }
 
     for (const data of series) {
-      try {
-        let data_target: string = data.name!;
-        let speeds = data.fields[1].values.toArray().reverse() as number[];
-        let timestamps = data.fields[0].values.toArray().reverse() as number[];
+      let timestamps: number[] = [];
+
+      for (const field of data.fields) {
+        if (field.name === 'time') {
+          timestamps = field.values.toArray().reverse() as number[];
+        }
+      }
+
+      for (const field of data.fields) {
+        let data_target: string = field.name;
+        let data_values = field.values.toArray().reverse() as number[];
+
+        // console.log('TIMESTAMPS', timestamps, values, data_target);
 
         let values: Array<[number, number]> = [];
 
-        for (let i = 0; i < speeds.length; i++) {
-          const speed = speeds[i];
+        for (let i = 0; i < data_values.length; i++) {
+          const speed = data_values[i];
           const time = timestamps[i];
           values.push([time, speed]);
         }
@@ -464,14 +477,51 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
             aggregate_group,
           });
         }
-      } catch (error) {
-        dataValues = [];
-        return;
       }
+
+      // try {
+      //   let data_target: string = data.name!;
+      //   let speeds = data.fields[1].values.toArray().reverse() as number[];
+      //   let timestamps = data.fields[0].values.toArray().reverse() as number[];
+      //   console.log('TIMESTAMPS', timestamps, speeds, data);
+      // let values: Array<[number, number]> = [];
+
+      // for (let i = 0; i < speeds.length; i++) {
+      //   const speed = speeds[i];
+      //   const time = timestamps[i];
+      //   values.push([time, speed]);
+      // }
+
+      // let aggregate_group: string | undefined;
+
+      // for (const aggregates of data_aggregates) {
+      //   if (!aggregates.pattern) {
+      //     continue;
+      //   }
+      //   let regex = new RegExp(aggregates.pattern);
+      //   if (regex.test(data_target)) {
+      //     aggregate_group = aggregates.aggregate_group;
+      //     break;
+      //   }
+      // }
+
+      // if (aggregate_group) {
+      //   dataValues.push({
+      //     data_target,
+      //     values,
+      //     aggregate_group,
+      //   });
+      // }
+      // } catch (error) {
+      //   dataValues = [];
+      //   return;
+      // }
     }
   }
 
   getMapSelectorClass(): string[] {
+    // @ts-ignore
+    window.atlas = this.state.atlas;
     let classes: string[] = [];
 
     if (!this.props.options.mapSelector || this.props.options.mapType === 'custom') {

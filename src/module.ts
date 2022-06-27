@@ -32,6 +32,7 @@ let defaultLegendOptions: LegendOptions = {
   type: lineLegend.type,
   target: 'latest',
   textColor: 'black',
+  unit: 'bps',
 };
 
 let defaultTopologyOptions: TopologyOptions = {
