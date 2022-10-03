@@ -1,5 +1,10 @@
 # Changelog
 
+## GRNOC Worldview Plugin 1.2.1 -- Mon 03 Oct 2022
+* Reverts the data dictionary mapping code to the one in v1.1.3
+* This version should not be used with GRNOC products till the issue is resolved
+* GRNOC products should still use v1.2.0
+
 ## GRNOC Worldview Plugin 1.2.0 -- Thu 31 Mar 2022
 * Reads data from Dataframes now
 * Updated Atlas version that accepts negative unit types

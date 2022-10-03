@@ -435,24 +435,15 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     }
 
     for (const data of series) {
-      let timestamps: number[] = [];
-
-      for (const field of data.fields) {
-        if (field.name === 'time') {
-          timestamps = field.values.toArray().reverse() as number[];
-        }
-      }
-
-      for (const field of data.fields) {
-        let data_target: string = field.name;
-        let data_values = field.values.toArray().reverse() as number[];
-
-        // console.log('TIMESTAMPS', timestamps, values, data_target);
+      try {
+        let data_target: string = data.name!;
+        let speeds = data.fields[1].values.toArray().reverse() as number[];
+        let timestamps = data.fields[0].values.toArray().reverse() as number[];
 
         let values: Array<[number, number]> = [];
 
-        for (let i = 0; i < data_values.length; i++) {
-          const speed = data_values[i];
+        for (let i = 0; i < speeds.length; i++) {
+          const speed = speeds[i];
           const time = timestamps[i];
           values.push([time, speed]);
         }
@@ -477,45 +468,10 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
             aggregate_group,
           });
         }
+      } catch (error) {
+        dataValues = [];
+        return;
       }
-
-      // try {
-      //   let data_target: string = data.name!;
-      //   let speeds = data.fields[1].values.toArray().reverse() as number[];
-      //   let timestamps = data.fields[0].values.toArray().reverse() as number[];
-      //   console.log('TIMESTAMPS', timestamps, speeds, data);
-      // let values: Array<[number, number]> = [];
-
-      // for (let i = 0; i < speeds.length; i++) {
-      //   const speed = speeds[i];
-      //   const time = timestamps[i];
-      //   values.push([time, speed]);
-      // }
-
-      // let aggregate_group: string | undefined;
-
-      // for (const aggregates of data_aggregates) {
-      //   if (!aggregates.pattern) {
-      //     continue;
-      //   }
-      //   let regex = new RegExp(aggregates.pattern);
-      //   if (regex.test(data_target)) {
-      //     aggregate_group = aggregates.aggregate_group;
-      //     break;
-      //   }
-      // }
-
-      // if (aggregate_group) {
-      //   dataValues.push({
-      //     data_target,
-      //     values,
-      //     aggregate_group,
-      //   });
-      // }
-      // } catch (error) {
-      //   dataValues = [];
-      //   return;
-      // }
     }
   }
 
