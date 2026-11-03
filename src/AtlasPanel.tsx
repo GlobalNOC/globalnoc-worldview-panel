@@ -62,10 +62,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     this.setLayerDisplay = this.setLayerDisplay.bind(this);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ═══════════════════════════════════════════════════════════════════════════
-
   componentDidMount() {
     const atlas = new Atlas(this.state.mapID, AtlasOptions);
     this.setState({ atlas }, () => {
@@ -118,10 +114,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     this.setTopologyData();
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  LISTENERS
-  // ═══════════════════════════════════════════════════════════════════════════
-
   setListeners() {
     this.setUpdateListeners();
     this.setMapViewUpdateListeners();
@@ -155,10 +147,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
       }
     });
   }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  MAP SETUP
-  // ═══════════════════════════════════════════════════════════════════════════
 
   setMapFromOptions() {
     const { mapType } = this.props.options;
@@ -278,10 +266,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  GROUP FILTER
-  // ═══════════════════════════════════════════════════════════════════════════
-
   getAllParentGroups() {
     const { atlas } = this.state;
     const parents   = new Set<string>();
@@ -342,10 +326,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  LEGEND + TOPOLOGY
-  // ═══════════════════════════════════════════════════════════════════════════
-
   setLegendConfiguration() {
     const { atlas }  = this.state;
     const { legend } = this.props.options;
@@ -405,10 +385,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  DATA
-  // ═══════════════════════════════════════════════════════════════════════════
-
   setTopologyData() {
     const { data } = this.props;
     if (data.state === 'Done' && lastDataDictionaryCreated !== data.request!.requestId) {
@@ -427,105 +403,6 @@ export class AtlasPanel extends Component<Props, AtlasPanelState> {
       default:          return vals[vals.length - 1] ?? 0;
     }
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  //  buildTooltipHtml
-  //
-  //  Generates the tooltip HTML dynamically based on whichever aggregate
-  //  groups are actually present on this line, using their real names as
-  //  row labels. This means:
-  //    - Changing "Input"→"Download" in Data Aggregates updates the popup
-  //    - A line with 3 groups gets 3 rows automatically
-  //    - No more hardcoded "Input" / "Output" strings
-  //
-  //  The template from options.topology.line.tooltip.content is used for
-  //  the popup header/wrapper. The data rows are injected into a placeholder
-  //  {{DATA_ROWS}} in that template. If your template doesn't have that
-  //  placeholder, rows are appended before the closing tag.
-  //
-  //  groupValues: Map<aggregateGroupName, formattedValueString>
-  //  lineName: the line's display name for the title row
-  // ─────────────────────────────────────────────────────────────────────────
-
-
-
-
-  // private buildTooltipHtml(
-  //   template: string,
-  //   groupValues: Map<string, string>,
-  //   lineName: string,
-  // ): string {
-  //   // Build one table row per group, capitalising the group name as the label
-  //   const rows = [...groupValues.entries()]
-  //     .map(([grp, val]) => {
-  //       const label = grp.charAt(0).toUpperCase() + grp.slice(1);
-  //       return `<tr>
-  //         <td style="padding:2px 12px 2px 0;font-weight:600;white-space:nowrap">${label}</td>
-  //         <td style="padding:2px 0;text-align:right;white-space:nowrap">${val}</td>
-  //       </tr>`;
-  //     })
-  //     .join('');
-
-  //   const dataBlock = `<table style="width:100%;border-collapse:collapse">${rows}</table>`;
-
-  //   // If the template has our placeholder, replace it
-  //   if (template.includes('{{DATA_ROWS}}')) {
-  //     return template.replace('{{DATA_ROWS}}', dataBlock);
-  //   }
-
-  //   // Otherwise replace the legacy fixed placeholders if they exist, AND
-  //   // also append any extra groups that don't have a matching placeholder.
-  //   // This keeps backwards compat with old templates that use
-  //   // $dataValues.input.now / $dataValues.output.now.
-  //   let html = template;
-  //   const replaced = new Set<string>();
-
-  //   groupValues.forEach((val, grp) => {
-  //     // Try the exact group name first (e.g. $dataValues.upload.now)
-  //     const exact = new RegExp(`\\$dataValues\\.${grp.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.now`, 'gi');
-  //     if (exact.test(html)) {
-  //       html = html.replace(exact, val);
-  //       replaced.add(grp);
-  //       return;
-  //     }
-  //     // Legacy aliases: a group whose name contains "in" (but not "out") → input
-  //     // a group whose name contains "out" → output
-  //     const lower = grp.toLowerCase();
-  //     const isIn  = lower.includes('in') && !lower.includes('out');
-  //     const isOut = lower.includes('out');
-  //     if (isIn && /\$dataValues\.input\.now/i.test(html)) {
-  //       html = html.replace(/\$dataValues\.input\.now/gi, val);
-  //       replaced.add(grp);
-  //     } else if (isOut && /\$dataValues\.output\.now/i.test(html)) {
-  //       html = html.replace(/\$dataValues\.output\.now/gi, val);
-  //       replaced.add(grp);
-  //     }
-  //   });
-
-  //   // For any groups that had no placeholder at all, inject them before </div>
-  //   const extras = [...groupValues.entries()].filter(([grp]) => !replaced.has(grp));
-  //   if (extras.length > 0) {
-  //     const extraRows = extras
-  //       .map(([grp, val]) => {
-  //         const label = grp.charAt(0).toUpperCase() + grp.slice(1);
-  //         return `<tr>
-  //           <td style="padding:2px 12px 2px 0;font-weight:600;white-space:nowrap">${label}</td>
-  //           <td style="padding:2px 0;text-align:right;white-space:nowrap">${val}</td>
-  //         </tr>`;
-  //       })
-  //       .join('');
-  //     const extraBlock = `<table style="width:100%;border-collapse:collapse;margin-top:4px">${extraRows}</table>`;
-  //     // Insert before the last closing tag
-  //     const lastClose = html.lastIndexOf('</');
-  //     if (lastClose !== -1) {
-  //       html = html.slice(0, lastClose) + extraBlock + html.slice(lastClose);
-  //     } else {
-  //       html += extraBlock;
-  //     }
-  //   }
-
-  //   return html;
-  // }
 
 private buildTooltipHtml(
     template: string,
@@ -566,7 +443,6 @@ private buildTooltipHtml(
   }
 
   addDataToCircuits() {
-    console.error("test2")
     const { atlas }   = this.state;
     const { options } = this.props;
 
@@ -578,7 +454,6 @@ private buildTooltipHtml(
     const legendMin = atlas.legends?.lines?.min;
     const legendMax = atlas.legends?.lines?.max;
 
-    // ── Coloring pass (unchanged from working version) ─────────────────────
     for (const t in atlas.topologies) {
       atlas.topologies[t].lines.forEach((line: any) => {
         line.min = legendMin;
@@ -627,7 +502,6 @@ private buildTooltipHtml(
       });
     }
 
-    // ── Tooltip pass ───────────────────────────────────────────────────────
     if (!dataValues || dataValues.length === 0) { return; }
 
     const selection = options.dataMappings.dataTarget;
@@ -651,9 +525,6 @@ private buildTooltipHtml(
             const dataTargets: string[] = line.metadata?.data_targets;
             if (!dataTargets || !Array.isArray(dataTargets) || dataTargets.length === 0) { return; }
 
-            // ── Collect latest value per aggregate group ──────────────────
-            // One bucket per unique aggregate_group name. Each data_target
-            // goes into exactly one bucket — its own group. No double-counting.
             const groupBuckets = new Map<string, number[]>();
 
             dataTargets.forEach((targetName: string) => {
@@ -669,13 +540,11 @@ private buildTooltipHtml(
 
             if (groupBuckets.size === 0) { return; }
 
-            // ── Reduce each group's values using the selected aggregation ──
             const groupValues = new Map<string, string>();
             groupBuckets.forEach((vals, grp) => {
               groupValues.set(grp, fmt(this.reduceValues(vals, selection)));
             });
 
-            // ── Inject into tooltip HTML ───────────────────────────────────
             if (line.tooltip && options.topology.line.tooltip.content) {
               const lineName = line.metadata?.name || line.name || '';
               line.tooltip.html = this.buildTooltipHtml(
@@ -739,10 +608,6 @@ private buildTooltipHtml(
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  MAP LAYER SELECTOR
-  // ═══════════════════════════════════════════════════════════════════════════
-
   getMapSelectorClass(): string[] {
     // @ts-ignore
     window.atlas = this.state.atlas;
@@ -797,10 +662,6 @@ private buildTooltipHtml(
     onOptionsChange({ ...this.props.options });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  EDITOR DISPLAY
-  // ═══════════════════════════════════════════════════════════════════════════
-
   configureAtlasEditorDisplay() {
     const { atlas, mapID } = this.state;
     const params           = urlUtil.getUrlSearchParams();
@@ -816,10 +677,6 @@ private buildTooltipHtml(
       if (atlas.editor.sidebar.sbContainer) { atlas.editor.hideSidebar(); }
     }
   }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  //  RENDER
-  // ═══════════════════════════════════════════════════════════════════════════
 
   render() {
     const { groupSelectorDisplay, groupFilter, subGroupFilter } = this.state;
@@ -838,10 +695,7 @@ private buildTooltipHtml(
           width: this.props.width,
         }}
       >
-        {/* ── Map canvas ─────────────────────────────────────────────── */}
         <div id={this.state.mapID} style={{ height: '100%' }} />
-
-        {/* ── Layer selector ─────────────────────────────────────────── */}
         <div className={this.getMapSelectorClass().join(' ')}>
           <div
             className={cx(styles.toggleMapSelectorArea)}
@@ -859,8 +713,6 @@ private buildTooltipHtml(
             />
           </div>
         </div>
-
-        {/* ── Group filter ───────────────────────────────────────────── */}
         <div style={{
           position: 'absolute', top: '10px', left: '60px',
           display: 'flex', flexDirection: 'row', alignItems: 'flex-start',
