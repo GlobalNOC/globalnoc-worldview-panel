@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { css, cx } from 'emotion';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { AutoSizer } from 'react-virtualized-auto-sizer';
 import {
   CodeEditor,
   stylesFactory,
@@ -35,26 +35,24 @@ export const TextPanelEditor: FC<StandardEditorProps<TextOptions, any, SimpleOpt
 
   return (
     <div className={cx(styles.editorBox)}>
-      <AutoSizer disableHeight>
-        {({ width }) => {
-          if (width === 0) {
-            return null;
-          }
-          return (
-            <CodeEditor
-              value={value.content}
-              onBlur={handleChange}
-              onSave={handleChange}
-              language={language}
-              width={width}
-              showMiniMap={false}
-              showLineNumbers={false}
-              height="200px"
-              getSuggestions={getSuggestions}
-            />
-          );
-        }}
-      </AutoSizer>
+      <AutoSizer renderProp={({ width }) => {
+        if (width === 0) {
+          return null;
+        }
+        return (
+          <CodeEditor
+            value={value.content}
+            onBlur={handleChange}
+            onSave={handleChange}
+            language={language}
+            width={width}
+            showMiniMap={false}
+            showLineNumbers={false}
+            height="200px"
+            getSuggestions={getSuggestions}
+          />
+        );
+      }} />
     </div>
   );
 };

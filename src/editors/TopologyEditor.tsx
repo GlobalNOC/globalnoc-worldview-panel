@@ -9,7 +9,7 @@ import {
   CodeEditorSuggestionItem,
   variableSuggestionToCodeEditorSuggestion,
 } from '@grafana/ui';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { AutoSizer } from 'react-virtualized-auto-sizer';
 import { GrafanaTheme, StandardEditorProps } from '@grafana/data';
 import { TopologyOptions, SimpleOptions } from '../types';
 import pointHtml from '../config/pointHtml.js';
@@ -58,26 +58,24 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
     if (value['point'].tooltip.custom) {
       return (
         <div className={cx(styles.inputContainer)}>
-          <AutoSizer disableHeight>
-            {({ width }) => {
-              if (width === 0) {
-                return null;
-              }
-              return (
-                <CodeEditor
-                  value={value['point'].tooltip.content}
-                  onBlur={(content) => handleTooltipContentChange(content, 'point')}
-                  onSave={(content) => handleTooltipContentChange(content, 'point')}
-                  language={'html'}
-                  width={width}
-                  showMiniMap={false}
-                  showLineNumbers={false}
-                  height="200px"
-                  getSuggestions={getSuggestions}
-                />
-              );
-            }}
-          </AutoSizer>
+          <AutoSizer renderProp={({ width }) => {
+            if (width === 0) {
+              return null;
+            }
+            return (
+              <CodeEditor
+                value={value['point'].tooltip.content}
+                onBlur={(content) => handleTooltipContentChange(content, 'point')}
+                onSave={(content) => handleTooltipContentChange(content, 'point')}
+                language={'html'}
+                width={width}
+                showMiniMap={false}
+                showLineNumbers={false}
+                height="200px"
+                getSuggestions={getSuggestions}
+              />
+            );
+          }} />
         </div>
       );
     }
@@ -88,26 +86,24 @@ export const TopologyEditor: FC<StandardEditorProps<TopologyOptions, any, Simple
     if (value['line'].tooltip.custom) {
       return (
         <div className={cx(styles.inputContainer)}>
-          <AutoSizer disableHeight>
-            {({ width }) => {
-              if (width === 0) {
-                return null;
-              }
-              return (
-                <CodeEditor
-                  value={value['line'].tooltip.content}
-                  onBlur={(content) => handleTooltipContentChange(content, 'line')}
-                  onSave={(content) => handleTooltipContentChange(content, 'line')}
-                  language={'html'}
-                  width={width}
-                  showMiniMap={false}
-                  showLineNumbers={false}
-                  height="200px"
-                  getSuggestions={getSuggestions}
-                />
-              );
-            }}
-          </AutoSizer>
+          <AutoSizer renderProp={({ width }) => {
+            if (width === 0) {
+              return null;
+            }
+            return (
+              <CodeEditor
+                value={value['line'].tooltip.content}
+                onBlur={(content) => handleTooltipContentChange(content, 'line')}
+                onSave={(content) => handleTooltipContentChange(content, 'line')}
+                language={'html'}
+                width={width}
+                showMiniMap={false}
+                showLineNumbers={false}
+                height="200px"
+                getSuggestions={getSuggestions}
+              />
+            );
+          }} />
         </div>
       );
     }

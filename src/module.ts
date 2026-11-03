@@ -14,10 +14,15 @@ import { DataMappingEditor } from 'editors/DataMappingEditor';
 
 let defaultCustomMap = '{"adjacencies":[],"endpoints":{},"metadata":{},"name":"New Map"}';
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  FIX 3: Default map view — change lat/lng/zoom here to set where the map
+//  opens by default.  Users can also override these live in the Grafana panel
+//  editor under "Map Appearance → Starting Position" without touching code.
+// ─────────────────────────────────────────────────────────────────────────────
 let defaultMapView: MapViewInterface = {
   lat: '0',
   lng: '0',
-  zoom: String(AtlasOptions.leaflet.minZoom) || '1',
+  zoom: String(AtlasOptions.leaflet.minZoom) || '2',
   minZoom: AtlasOptions.leaflet.minZoom || 1,
   maxZoom: AtlasOptions.leaflet.maxZoom || 20,
 };
@@ -47,6 +52,7 @@ let defaultTopologyOptions: TopologyOptions = {
   },
   line: {
     color: AtlasOptions.line.color,
+    aggregationType: 'max',
     tooltip: {
       display: true,
       custom: false,
@@ -69,14 +75,8 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       name: 'Map Source',
       settings: {
         options: [
-          {
-            value: 'custom',
-            label: 'Custom',
-          },
-          {
-            value: 'url',
-            label: 'URL',
-          },
+          { value: 'custom', label: 'Custom' },
+          { value: 'url',    label: 'URL'    },
         ],
       },
       category: ['Map Settings'],
@@ -85,7 +85,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       id: 'customMapJSON',
       path: 'customMapJSON',
       name: 'Custom Map',
-      description: 'Edit map using the Atlas Editor or Manually configure the JSON',
+      description: 'Edit map using the Atlas Editor or manually configure the JSON',
       defaultValue: { content: JSON.stringify(JSON.parse(defaultCustomMap), null, 2), mode: 'json' },
       editor: TextPanelEditor,
       showIf: (config) => config.mapType === 'custom',
@@ -101,12 +101,45 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       showIf: (config) => config.mapType === 'url',
       category: ['Map Settings'],
     })
+
+    // ── Map Appearance ────────────────────────────────────────────────────
+    // FIX 3: Three plain number/text inputs for starting position so users
+    // can type exact coordinates directly in the Grafana panel editor.
+    // These write into options.mapView.lat / .lng / .zoom which AtlasPanel
+    // already reads in setMapView().  The existing MapViewEditor custom
+    // editor is kept below for advanced users who prefer the visual widget.
+    .addTextInput({
+      path: 'mapView.lat',
+      name: 'Starting Latitude',
+      description: 'Latitude for the initial map centre (e.g. 39.5 for the US)',
+      defaultValue: defaultMapView.lat,
+      category: ['Map Appearance'],
+    })
+    .addTextInput({
+      path: 'mapView.lng',
+      name: 'Starting Longitude',
+      description: 'Longitude for the initial map centre (e.g. -98.35 for the US)',
+      defaultValue: defaultMapView.lng,
+      category: ['Map Appearance'],
+    })
+    .addNumberInput({
+      path: 'mapView.zoom',
+      name: 'Starting Zoom Level',
+      description: 'Initial zoom level (1 = world view, 10 = city level, 18 = street level)',
+      defaultValue: parseFloat(defaultMapView.zoom),
+      settings: {
+        min: defaultMapView.minZoom,
+        max: defaultMapView.maxZoom,
+        step: 0.5,
+      },
+      category: ['Map Appearance'],
+    })
     .addCustomEditor({
       id: 'mapView',
       path: 'mapView',
-      name: 'Map View',
+      name: 'Map View (advanced)',
       defaultValue: defaultMapView,
-      description: 'Coordinates of the center of the map and map zoom level',
+      description: 'Fine-grained map centre / zoom editor — use the inputs above for quick changes',
       editor: MapViewEditor,
       category: ['Map Appearance'],
     })
@@ -136,6 +169,8 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       description: 'Allows user to toggle map layers from the dashboard view',
       category: ['Map Appearance'],
     })
+
+    // ── Legend ─────────────────────────────────────────────────────────────
     .addCustomEditor({
       path: 'legend',
       defaultValue: defaultLegendOptions,
@@ -145,6 +180,8 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       description: 'Edit/Update map legend configuration',
       category: ['Legend Options'],
     })
+
+    // ── Topology ───────────────────────────────────────────────────────────
     .addCustomEditor({
       path: 'topology',
       defaultValue: defaultTopologyOptions,
@@ -154,13 +191,29 @@ export const plugin = new PanelPlugin<SimpleOptions>(AtlasPanel).setPanelOptions
       description: 'Edit/Update default values of topological layers.',
       category: ['Topology Options'],
     })
+
+    // ── Data Settings ──────────────────────────────────────────────────────
     .addCustomEditor({
       id: 'dataAggregateGroups',
       path: 'dataAggregateGroups',
       name: 'Data Aggregate(s)',
-      description: 'Map Incoming Data To Circuits. Please Run the query again to see applied changes.',
+      description: 'Map Incoming Data To Circuits. Please run the query again to see applied changes.',
       defaultValue: [],
       editor: DataGroupEditor,
+      category: ['Data Settings'],
+    })
+    .addSelect({
+      path: 'topology.line.aggregationType',
+      name: 'Line Data Aggregation',
+      description: 'Choose how to handle multiple data targets assigned to a single line.',
+      defaultValue: 'max',
+      settings: {
+        options: [
+          { value: 'max', label: 'Highest Value (Max)' },
+          { value: 'avg', label: 'Average'             },
+          { value: 'sum', label: 'Sum (Total)'         },
+        ],
+      },
       category: ['Data Settings'],
     })
     .addCustomEditor({

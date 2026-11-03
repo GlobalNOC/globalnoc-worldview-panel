@@ -13,14 +13,24 @@ const getDataTargetCurrentValue = (options: DataMappingOptions): SelectableValue
         label: 'Max of Aggregate Group',
         description: `Color topology based on highest \`${options.colorCriteria}\` value between all data aggregate groups`,
       };
-      break;
     case 'chooseMin':
       return {
         value: 'chooseMin',
         label: 'Min of Aggregate Group',
         description: `Color topology based on lowest \`${options.colorCriteria}\` value between all data aggregate groups`,
       };
-      break;
+    case 'chooseAvg':
+      return {
+        value: 'chooseAvg',
+        label: 'Average of Aggregate Group',
+        description: `Color topology based on average \`${options.colorCriteria}\` value between all data aggregate groups`,
+      };
+    case 'chooseSum':
+      return {
+        value: 'chooseSum',
+        label: 'Sum of Aggregate Group',
+        description: `Color topology based on sum \`${options.colorCriteria}\` value between all data aggregate groups`,
+      };
     default:
       return {
         value: options.dataTarget,
@@ -41,6 +51,16 @@ const getDataTargetValues = (aggregateGroups: DataAggregateGroup[], options: Dat
       value: 'chooseMin',
       label: 'Min of Aggregate Group',
       description: `Color topology based on lowest \`${options.colorCriteria}\` value between all data aggregate groups`,
+    },
+    {
+      value: 'chooseAvg',
+      label: 'Avg of Aggregate Group',
+      description: `Color topology based on average \`${options.colorCriteria}\` value between all data aggregate groups`,
+    },
+    {
+      value: 'chooseSum',
+      label: 'Sum of Aggregate Group',
+      description: `Color topology based on sum \`${options.colorCriteria}\` value between all data aggregate groups`,
     },
   ];
 
@@ -84,7 +104,7 @@ const getColorCriteriaCurrentValue = (options: DataMappingOptions): SelectableVa
       };
     default:
       return {
-        value: 'options.colorCriteria',
+        value: options.colorCriteria,
         label: properCase(options.colorCriteria),
       };
   }
@@ -109,7 +129,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           onChange={(e) => {
             onChange({
               ...value,
-              dataAggregate: e.value!,
+              dataAggregate: e.value as any,
             });
           }}
           value={getDataAggregateCurrentValue(value)}
@@ -122,8 +142,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
             {
               value: 'sum',
               label: 'Sum Matching Datapoints',
-              description:
-                'All matching datapoints found for the same data aggregate group will be added per timestamp',
+              description: 'All matching datapoints found for the same data aggregate group will be added per timestamp',
             },
           ]}
         />
@@ -138,7 +157,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           onChange={(e) => {
             onChange({
               ...value,
-              colorCriteria: e.value!,
+              colorCriteria: e.value as any,
             });
           }}
           value={getColorCriteriaCurrentValue(value)}
@@ -160,7 +179,7 @@ export const DataMappingEditor: FC<StandardEditorProps<DataMappingOptions, any, 
           onChange={(e) => {
             onChange({
               ...value,
-              dataTarget: e.value!,
+              dataTarget: e.value as string,
             });
           }}
           value={getDataTargetCurrentValue(value)}

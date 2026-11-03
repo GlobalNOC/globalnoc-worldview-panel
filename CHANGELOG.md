@@ -37,3 +37,4 @@
 - Legend editing options
 - Ability to override some default Atlas4 configuration from the options panel
 
+- updating

@@ -49,30 +49,15 @@ const leafletOptions = {
   updateWhenIdle: true,
 };
 
-const tileOptions = [
-  {
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-    token: 'pk.eyJ1Ijoic3JlZW11a2hhIiwiYSI6ImNqYXRxeGc0YjU1c3gyenBsbmFtdDFudXMifQ.asGA_AB68fXU91Hw3nsUJQ',
-    maxZoom: 20,
-    attribution: 'Nope',
-    id: 'mapbox.streets',
-    default: true,
-    name: 'map'
-  }
-  // {
-  //   url: 'https://api.mapbox.com/styles/v1/grnoc/ckm2bqp58b1fr17o0xc82mn52/tiles/{z}/{x}/{y}',
-  //   token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
-  //   maxZoom: 20,
-  //   attribution: 'Nope',
-  //   id: 'mapbox.satellite',
-  //   name: 'satellite'
-  // },
-  // {
-  //   url: 'https://api.mapbox.com/styles/v1/grnoc/cknkjwibv0ksy17o6ohjkk3t2/tiles/{z}/{x}/{y}',
-  //   token: 'pk.eyJ1IjoiZ3Jub2MiLCJhIjoiY2ttMmJvcWt4MXB3cDJucWVxN2ltZ2JoOCJ9.ZKpOkAW4qvdQZoX_Rk18QQ',
-  //   maxZoom: 20,
-  //   name: 'dark'
-  // }
+  const tileOptions = [
+    {
+      url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      default: true,
+      name: 'map'
+    }
+
 ]
 
 const overlayTileOptions = [

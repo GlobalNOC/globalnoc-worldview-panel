@@ -35,7 +35,7 @@ export interface SimpleOptions {
 export interface DataMappingOptions {
   dataTarget: string;
   dataAggregate: 'first' | 'sum';
-  colorCriteria: 'now' | 'min' | 'max' | 'avg';
+  colorCriteria: 'now' | 'min' | 'max' | 'avg' | 'sum'; // Cleaned up duplicates
 }
 
 export interface DataAggregateGroup {
@@ -74,6 +74,7 @@ export interface TopologyOptions {
   };
   line: {
     color: string;
+    aggregationType: 'max' | 'avg' | 'sum';
     tooltip: {
       display: boolean;
       custom: boolean;
